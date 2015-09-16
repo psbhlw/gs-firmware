@@ -1,4 +1,5 @@
 
+;	DEFINE SKIP_MEM_TEST 1
 
         ORG GSRomBaseL+4
 
@@ -10,11 +11,11 @@
         ORG GSRomBaseL+#0100
         DEFM "General  Sound (tm)  ROM"
         DEFM "Copyright   1997 Stinger"
-        DEFM "Version 1.05a           "
+        DEFM "Version 1.05b           "
 
 	ORG GSRomBaseL+#0080
 	DB "This is improved ROM Version 1.04 Beta. "
-	DB "Bugfixes by psb & Evgeny Muchkin, 2007.",0
+	DB "Bugfixes by psb & Evgeny Muchkin, 2007, 2015.",0
 
 
 
@@ -127,6 +128,39 @@ L8D77   INC HL
 	CALL Patch5i2
 	ORG INITR0E+12
 	JP Patch5i3
+
+
+
+;------------------------------------------------------------------------------;
+
+;QUANTUM.a80
+;loop sample if mod cmd 9xx has an offset beyond sample
+	ORG COMM3_
+	JP Patch6
+
+
+
+;------------------------------------------------------------------------------;
+
+;INIT_L.a80
+;skip time consuming ROM CRC check and RAM test
+	IFDEF SKIP_MEM_TEST
+	ORG INIT_+1+2+1+1+3+3 ;skip ROM CRC check
+	JR INIT03
+
+	ORG INITR08e ;skip intensive RAM check and clear
+	JP INIT0Ce
+	ENDIF
+
+
+
+;------------------------------------------------------------------------------;
+
+;PLAY.a80
+;fix samples sign no more than needed
+	ORG SMPMD2f
+	JP Patch7
+
 
 
 ;------------------------------------------------------------------------------;
@@ -436,7 +470,47 @@ Patch5i3
 	LD (MODLLEN),HL
 	JP INITVAR
 
-;	display $,SGEN
+
+
+
+
+
+;------------------------------------------------------------------------------;
+
+; loop sample if mod cmd 9xx has an offset beyond sample
+Patch6	
+	LD A,(IY+CHLPBP)
+	INC A
+	JP Z,Patch6e
+	DEC A
+	LD L,(IY+CHLPBL)
+	LD H,(IY+CHLPBH)
+	LD (IY+CHCURL),L
+	LD (IY+CHCURH),H
+	LD (IY+CHCURP),A
+	JP COMM5
+Patch6e
+	RES 7,(IY+CHSTAT)
+	JP COMM5
+
+
+
+
+
+
+;------------------------------------------------------------------------------;
+
+; calc pages number to fix samples sign
+Patch7
+	LD BC,(MEMBOT+1)
+	RL C
+	RL B
+	LD A,B ;a=last used page#
+	INC A
+	SUB E  ;sub smps page#
+	LD B,A ;num of pages to process
+	JP SMPMD2
+
 
 
 

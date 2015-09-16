@@ -265,7 +265,7 @@ LPCNT   LD A,(IY+24)
         LD A,(SMPS+2)
         LD E,A
         LD D,high RAMPG
-        LD A,(NUMPG)
+SMPMD2f LD A,(NUMPG)
         SUB E
         LD B,A
 

@@ -41,7 +41,7 @@ INIT02  POP DE
         SBC HL,DE
       ; JR NZ,INIT_
 
-
+INIT03
         LD HL,RAMPG
         LD DE,RAMPG+1
         LD BC,#003F
@@ -119,7 +119,7 @@ INITR08 CP (HL)
         RLCA
         JR C,INITR08
 
-
+INITR08e
         EXX
         LD HL,#8000
 
@@ -195,7 +195,7 @@ INIT0C  PUSH HL
         JP NZ,INIT0C
 
         EXX
-        INC E
+INIT0Ce INC E
         EXX
 
 INITR0D EXX
