@@ -1,11 +1,11 @@
 @ECHO OFF
-sjasmplus.exe -isrc -isrc/sgen make_rom.a80
+sjasmplus.exe -isrc -ipatch -isrc/sgen make_rom.a80
 
 if %errorlevel% neq 0 goto end
 
-	copy /b gsroml+gsromh gs104.rom >nul
-	del gsroml
-	del gsromh
+	copy /b gsroml_+gsromh_ gs105a.rom >nul
+	del gsroml_
+	del gsromh_
 
 :end
 pause

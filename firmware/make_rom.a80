@@ -20,5 +20,11 @@
 		print ("ROM CS: ",s-2128680)
 	ENDLUA
 
-	SAVEBIN "gsroml",GSRomBaseL,#4000
-	SAVEBIN "gsromh",GSRomBaseH,#4000
+;	SAVEBIN "gsroml",GSRomBaseL,#4000
+;	SAVEBIN "gsromh",GSRomBaseH,#4000
+
+	include "patch/patch.a80"
+
+	SAVEBIN "gsroml_",GSRomBaseL,#4000
+	SAVEBIN "gsromh_",GSRomBaseH,#4000
+
